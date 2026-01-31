@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Now Playing - Rádio Max</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="container">
+    <h1>🎵 Právě hraje:</h1>
+    <div id="nowplaying">
+      <span id="song">Načítám...</span>
+      <img id="cover" src="covers/default.jpg" alt="Cover">
+    </div>
+  </div>
+
+<script>
+const npFile = 'np.txt'; // soubor exportovaný z RadioDJ
+const coverPath = 'covers/'; // složka s obrázky
+
+function updateNowPlaying() {
+  fetch(npFile)
+    .then(response => response.text())
+    .then(text => {
+      text = text.trim();
+      if (!text) return;
+
+      // Zobraz text
+      document.getElementById('song').textContent = text;
+
+      // Vybere cover podle názvu skladby
+      let songTitle = text.split(' - ')[1]; // Název písničky
+      let coverFile = coverPath + (songTitle ? songTitle + '.jpg' : 'default.jpg');
+      document.getElementById('cover').src = coverFile;
+    })
+    .catch(err => {
+      console.log("Nepodařilo se načíst np.txt:", err);
+    });
+}
+
+// Aktualizace každých 5 sekund
+setInterval(updateNowPlaying, 5000);
+updateNowPlaying();
+</script>
+</body>
+</html>
+
